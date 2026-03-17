@@ -11,6 +11,7 @@ use Filament\Schemas\Schema;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TagsInput;
+use Filament\Tables\Columns\IconColumn;
 
 class PostForm
 {
@@ -19,8 +20,11 @@ class PostForm
         return $schema
             ->components([
                 //
-                TextInput::make('title')->required(),
-                TextInput::make('slug')->required(),
+                TextInput::make('title')->required()
+                ->minLength(5),
+                TextInput::make('slug')
+                ->required()
+                ->unique(),
                 Select::make('category_id')
                 ->label('Category')
                 ->options(\App\Models\Category::all()
