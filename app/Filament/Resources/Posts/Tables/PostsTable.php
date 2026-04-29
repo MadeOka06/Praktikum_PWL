@@ -2,9 +2,13 @@
 
 namespace App\Filament\Resources\Posts\Tables;
 
+use Filament\Actions\Action;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
+use Filament\Actions\DeleteAction;
 use Filament\Actions\EditAction;
+use Filament\Actions\ReplicateAction;
+use Filament\Forms\Components\Checkbox;
 use Filament\Tables\Columns\ColorColumn;
 use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\ImageColumn;
@@ -103,6 +107,20 @@ class PostsTable
             ])
             ->recordActions([
                 EditAction::make(),
+                DeleteAction::make(),
+                ReplicateAction::make(),
+                Action::make('status')
+                ->requiresConfirmation()
+                ->icon('heroicon-o-check-circle')
+                ->label('status change')
+                ->schema([
+                    Checkbox::make('published')
+                    ->default(fn($record):bool => $record->published),
+                ])
+                ->action(function ($record,$data){
+                    $record->update(['published' => $data['published']]);
+                })
+                
             ])
             ->toolbarActions([
                 BulkActionGroup::make([
