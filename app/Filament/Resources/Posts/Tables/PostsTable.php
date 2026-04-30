@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\Posts\Tables;
 
+use App\Models\Category;
 use Filament\Actions\Action;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
@@ -74,9 +75,11 @@ class PostsTable
                         fn($query,$date) => $query->whereDate('created_at',$date),
                     );
                 }),
-                SelectFilter::make('catefory_id')
+                SelectFilter::make('category_id')
                 ->relationship('category','name')
+                ->options(Category::all()->pluck("name","id"))
                 ->label('Category')
+                ->searchable()
                 ->preload(),
                 Filter::make('title')
                 ->label('Title')
